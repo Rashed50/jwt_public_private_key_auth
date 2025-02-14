@@ -94,5 +94,8 @@ key.export(private_key = True)
 
 In this Project, we first use the RSA algorithm to sign three sets of key pairs and then use the private key in the first set of key pairs to sign a JWT.
 
+Details process you will get here 
+https://www.emqx.com/en/blog/jwt-authentication-and-jwks-endpoint-in-mqtt
+
 
 
