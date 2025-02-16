@@ -2,7 +2,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from jwcrypto import jwk, jwt
 import json
 
-from CerficateServer import CertificateGernerator
+from CertificateGernerator import CertificateGernerator
 
 HOSTNAME = "127.0.0.1"
 PORT = 8090
@@ -54,41 +54,42 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        old = CertificateGernerator.loadPublicJWKS()
+        old = load_public_jwks() # CertificateGernerator.loadPublicJWKS()
         self.wfile.write(bytes(old, 'utf-8'))
 
 
 
 
-jwks = CertificateGernerator.generateJWKS(3)
-CertificateGernerator.saveJWKSAsJsonFileInLocalStorage(jwks)
+# jwks = CertificateGernerator.generateJWKS(3)
+# CertificateGernerator.saveJWKSAsJsonFileInLocalStorage(jwks)
+# claims = {}
+# claims['client'] = 'admin'
+# claims['username'] = 'admin'
+# jwt = CertificateGernerator.issueJWS(jwks[0], 'RSA256', claims)
+
+# CertificateGernerator.printPrivateKey(jwks=jwks[0])
+# CertificateGernerator.printPublicKey(jwks=jwks[0])
+
+
+
+jwks = generate_jwks(3)
+save_jwks(jwks)
+# Export public key and private key in PEM
+public_key_in_pem = jwks[0].export_to_pem()
+private_key_in_pem = jwks[0].export_to_pem(private_key = True, password = None)
+
+print("[Public Key]\n%s" % (str(public_key_in_pem, 'utf-8')))
+print("[Private Key]\n%s" % (str(private_key_in_pem, 'utf-8')))
+
+# Sign the JWT using the first JWK
 claims = {}
 claims['client'] = 'myclient'
 claims['username'] = 'myuser'
-jwt = CertificateGernerator.issueJWS(jwks[0], 'RS256', claims)
+jwt = issue_jws(jwks[0], 'RS256', claims)
 
-CertificateGernerator.printPublicKey(jwks=jwks[0])
-CertificateGernerator.printPrivateKey(jwks=jwks[0])
+print("JWT Value: \n [JWT]\n%s\n" % (jwt))
 
-
-# jwks = generate_jwks(3)
-# save_jwks(jwks)
-# # Export public key and private key in PEM
-# public_key_in_pem = jwks[0].export_to_pem()
-# private_key_in_pem = jwks[0].export_to_pem(private_key = True, password = None)
-
-# print("[Public Key]\n%s" % (str(public_key_in_pem, 'utf-8')))
-# print("[Private Key]\n%s" % (str(private_key_in_pem, 'utf-8')))
-
-# # Sign the JWT using the first JWK
-# claims = {}
-# claims['client'] = 'myclient'
-# claims['username'] = 'myuser'
-# jwt = issue_jws(jwks[0], 'RS256', claims)
-
-# print("JWT Value: \n [JWT]\n%s\n" % (jwt))
-
-# save_jwks(jwks)
+save_jwks(jwks)
 
 
 
