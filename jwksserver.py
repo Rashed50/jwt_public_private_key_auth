@@ -83,8 +83,8 @@ print("[Private Key]\n%s" % (str(private_key_in_pem, 'utf-8')))
 
 # Sign the JWT using the first JWK
 claims = {}
-claims['client'] = 'myclient'
-claims['username'] = 'myuser'
+claims['client_id'] = 'abc_admin'
+claims['username'] = 'abc_admin'
 jwt = issue_jws(jwks[0], 'RS256', claims)
 
 print("JWT Value: \n [JWT]\n%s\n" % (jwt))
